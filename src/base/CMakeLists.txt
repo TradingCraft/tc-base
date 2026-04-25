@@ -5,6 +5,26 @@
 file(GLOB libSrcs CONFIGURE_DEPENDS *.cc)
 file(GLOB libHdrs CONFIGURE_DEPENDS *.h *.hh *.hpp)
 
+# Re-configure when HEAD or index changes so GIT_HASH stays current
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/.git/HEAD
+    ${CMAKE_SOURCE_DIR}/.git/index)
+
+# Extract Git hash for version info
+execute_process(
+    COMMAND git rev-parse --short=8 HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+if(NOT GIT_HASH)
+    set(GIT_HASH "unknown")
+endif()
+
+# Generate version header from CMake variables
+configure_file(version.hh.in ${CMAKE_CURRENT_BINARY_DIR}/version.hh @ONLY)
+
 # Target Library name
 set(tgt base)
 
@@ -16,6 +36,7 @@ target_sources(${tgt}
 
 target_include_directories(${tgt} 
   PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )

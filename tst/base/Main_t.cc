@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
   // Then pass arguments to CLI
   CLI::App app;  
   rc = ConfigureCLI(app, argc, argv);
-  if(rc) return rc;
+  if(rc >= 0) return rc;
 
   InitLogging();  // Initialize the logging 
   Log(info,"Starting {}", argv[0]);
