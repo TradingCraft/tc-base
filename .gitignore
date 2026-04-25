@@ -39,3 +39,25 @@
 
 # debug information files
 *.dwo
+
+CMakeFiles/
+CMakeCache.txt
+
+build/
+bld*/
+inst*/
+gsl.def
+*.nupkg
+*.pdb
+*~
+/build
+Testing/
+.qt/
+.vscode/
+.codex
+
+
+# Claude Code: commit shared config, ignore per-user state
+.claude/settings.local.json
+.claude/**/*.local.*
+CLAUDE.local.md
